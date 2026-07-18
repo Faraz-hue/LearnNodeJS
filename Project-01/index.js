@@ -19,13 +19,20 @@ app.get("/api/users", (req, res) => {
     return res.json(users)
 })
 // DYNAMIC PATH PARAMETERS
-app.get("/api/users/:id", (req, res) => {
+
+app.route("/api/users/:id").get((req, res) => {
     // GET ID FIRST
     const id = Number(req.params.id);
     // FIND IN JSON Second step
     const user = users.find((user) => user.id === id
     )
     return res.json(user);
+}).patch((req, res) => {
+    // TODO: EDITE the user with given id
+    return res.json({ status: "pending" })
+}).delete((req, res) => {
+    // TODO: DELETE the user with given id
+    return res.json({ status: "pending" })
 })
 
 // Question: How we do post request
@@ -33,16 +40,6 @@ app.get("/api/users/:id", (req, res) => {
 
 app.post("/api/users", (req, res) => {
     // TODO: Create new uses
-    res.json({ status: "pending" })
-})
-
-app.patch("/api/users/:id", (req, res) => {
-    // TODO: EDITE the user with given id
-    res.json({ status: "pending" })
-})
-
-app.delete("/api/users/:id", (req, res) => {
-    // TODO: DELETE the user with given id
     res.json({ status: "pending" })
 })
 
