@@ -7,12 +7,18 @@ const fs = require("fs")
 const app = express()
 const PORT = 8000
 // Middleware - Plugin
-app.use(express.urlencoded({ extended: false }))
+// app.use(express.urlencoded({ extended: false }))
 // Making our own middleware using use function
 app.use((req, res, next) => {
     console.log("hello from middilware 1")
     req.myName = "John Doe"
     next();
+})
+
+app.use((req, res, next) => {
+    fs.appendFile("log.txt", `\n${Date.now()}: ${req.method}: ${req.path}\n`, (err, data) => {
+        next()
+    })
 })
 
 app.use((req, res, next) => {
