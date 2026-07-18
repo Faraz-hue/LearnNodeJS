@@ -3,9 +3,11 @@
 
 const express = require("express")
 const users = require("./MOCK_DATA.json")
-
+const fs = require("fs")
 const app = express()
 const PORT = 8000
+// Middleware - Plugin
+app.use(express.urlencoded({ extended: false }))
 
 app.get("/users", (req, res) => {
     const html = `
@@ -14,6 +16,7 @@ app.get("/users", (req, res) => {
     </ul>`
     res.send(html)
 })
+
 // 1. REST API points
 app.get("/api/users", (req, res) => {
     return res.json(users)
@@ -28,19 +31,73 @@ app.route("/api/users/:id").get((req, res) => {
     )
     return res.json(user);
 }).patch((req, res) => {
-    // TODO: EDITE the user with given id
-    return res.json({ status: "pending" })
+    const id = Number(req.params.id);
+    const body = req.body;
+
+    const index = users.findIndex(user => user.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+
+    // Update only the fields sent in the request
+    users[index] = {
+        ...users[index],
+        ...body
+    };
+
+    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users, null, 2), (err) => {
+        if (err) {
+            return res.status(500).json({
+                message: "Error updating user"
+            });
+        }
+
+        return res.json({
+            message: "User updated successfully",
+            user: users[index]
+        });
+    });
 }).delete((req, res) => {
-    // TODO: DELETE the user with given id
-    return res.json({ status: "pending" })
-})
+    const id = Number(req.params.id);
+
+    const user = users.findIndex(user => user.id === id);
+
+    if (user === -1) {
+        return res.status(404).json({
+            message: "User not found"
+        });
+    }
+
+    users.splice(user, 1);
+
+    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users, null, 2), (err) => {
+        if (err) {
+            return res.status(500).json({
+                message: "Error deleting user"
+            });
+        }
+
+        return res.json({
+            message: "User deleted successfully",
+            users
+        });
+    });
+});
 
 // Question: How we do post request
 // Browser by default use GET request
 
 app.post("/api/users", (req, res) => {
-    // TODO: Create new uses
-    res.json({ status: "pending" })
-})
+    const body = req.body;
+
+    users.push({ id: users.length + 1, ...body });
+
+    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
+        return res.json({ status: "success", id: users.length })
+    });
+});
 
 app.listen(PORT, () => console.log("Servert started at Port" + PORT))

@@ -33,3 +33,7 @@ DELETE /api/users/1 - DELETE the users with id 1
 DYNAMIC PATH PARAMETERs
 GET /api/users/:id
 :id -> Variable | Dynamic
+
+There is now way froma browser to update, delete, edit the data
+For this problem our solution is POSTMAN 
+POST MAN is a utility tool to helpin api testing and documentaion
