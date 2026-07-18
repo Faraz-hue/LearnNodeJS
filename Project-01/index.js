@@ -8,6 +8,18 @@ const app = express()
 const PORT = 8000
 // Middleware - Plugin
 app.use(express.urlencoded({ extended: false }))
+// Making our own middleware using use function
+app.use((req, res, next) => {
+    console.log("hello from middilware 1")
+    req.myName = "John Doe"
+    next();
+})
+
+app.use((req, res, next) => {
+    console.log("hello from middilware 2", req.myName)
+    return res.end("Hey")
+})
+
 
 app.get("/users", (req, res) => {
     const html = `
@@ -34,17 +46,17 @@ app.route("/api/users/:id").get((req, res) => {
     const id = Number(req.params.id);
     const body = req.body;
 
-    const index = users.findIndex(user => user.id === id);
+    const user = users.findIndex(user => user.id === id);
 
-    if (index === -1) {
+    if (user === -1) {
         return res.status(404).json({
             message: "User not found"
         });
     }
 
     // Update only the fields sent in the request
-    users[index] = {
-        ...users[index],
+    users[user] = {
+        ...users[user],
         ...body
     };
 
