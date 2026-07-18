@@ -18,7 +18,7 @@ app.get("/users", (req, res) => {
 app.get("/api/users", (req, res) => {
     return res.json(users)
 })
-
+// DYNAMIC PATH PARAMETERS
 app.get("/api/users/:id", (req, res) => {
     // GET ID FIRST
     const id = Number(req.params.id);
@@ -28,5 +28,22 @@ app.get("/api/users/:id", (req, res) => {
     return res.json(user);
 })
 
+// Question: How we do post request
+// Browser by default use GET request
+
+app.post("/api/users", (req, res) => {
+    // TODO: Create new uses
+    res.json({ status: "pending" })
+})
+
+app.patch("/api/users/:id", (req, res) => {
+    // TODO: EDITE the user with given id
+    res.json({ status: "pending" })
+})
+
+app.delete("/api/users/:id", (req, res) => {
+    // TODO: DELETE the user with given id
+    res.json({ status: "pending" })
+})
 
 app.listen(PORT, () => console.log("Servert started at Port" + PORT))
