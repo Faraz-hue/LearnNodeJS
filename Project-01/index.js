@@ -7,11 +7,6 @@ const users = require("./MOCK_DATA.json")
 const app = express()
 const PORT = 8000
 
-// 1. Routes
-app.get("/api/users", (req, res) => {
-    return res.json(users)
-})
-
 app.get("/users", (req, res) => {
     const html = `
     <ul>
@@ -19,4 +14,11 @@ app.get("/users", (req, res) => {
     </ul>`
     res.send(html)
 })
+
+// 1. REST API points
+app.get("/api/users", (req, res) => {
+    return res.json(users)
+})
+
+
 app.listen(PORT, () => console.log("Servert started at Port" + PORT))
