@@ -1,0 +1,33 @@
+// REST API DESIGN - JSON DATA SUPPORTED
+
+BAD PRACTICE VS GOOD PRACTICE
+BAD PRACTICE :
+
+GET /users - List all users *DONE
+GET /users/1 - Get user with ID 1
+GET /users/2 - Get user with ID 2
+
+POST /users - Create new user
+
+PATCH /user/id - Edite the user with id i.e.,1
+DELETE /users/1 - DELETE the users with id 1
+
+To practice this we need data we will hard code this data
+VISIT the SITE to generate data
+https://www.mockaroo.com/
+
+IMPORTANT: SERVER SHOULD SUPPORT BROWSERS AND MOBILE APPS
+
+GOOD PRACTICE
+
+GET /users - HTML Document Render
+GET /api/users - List all users JSON - Done
+GET /api/users/1 - Get user with ID 1
+GET /api/users/2 - Get user with ID 2
+
+POST /api/users - Create new user
+
+PATCH /api/user/id - Edite the user with id i.e.,1
+DELETE /api/users/1 - DELETE the users with id 1
+
+
