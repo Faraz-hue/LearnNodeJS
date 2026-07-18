@@ -30,4 +30,6 @@ POST /api/users - Create new user
 PATCH /api/user/id - Edite the user with id i.e.,1
 DELETE /api/users/1 - DELETE the users with id 1
 
-
+DYNAMIC PATH PARAMETERs
+GET /api/users/:id
+:id -> Variable | Dynamic
