@@ -8,3 +8,27 @@
 1784375950522: POST: /api/users/999
 
 1784375958845: POST: /api/users/9
+
+1784521818172: GET: /users/
+
+1784521828490: GET: /api/users/
+
+1784521865442: GET: /api/users/
+
+1784521883981: GET: /api/users/
+
+1784521885731: GET: /api/users/
+
+1784521892146: GET: /api/users/
+
+1784521910814: GET: /users/
+
+1784521911299: GET: /favicon.ico
+
+1784522201677: GET: /api/users/
+
+1784522282804: GET: /api/users/
+
+1784522322444: GET: /api/users/
+
+1784522349581: GET: /api/users/
