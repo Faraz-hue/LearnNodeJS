@@ -50,6 +50,7 @@ app.route("/api/users/:id").get((req, res) => {
     // FIND IN JSON Second step
     const user = users.find((user) => user.id === id
     )
+    if (!user) return res.status(404).json({ msg: "user not Found" })
     return res.json(user);
 }).patch((req, res) => {
     const id = Number(req.params.id);
@@ -117,7 +118,7 @@ app.post("/api/users", (req, res) => {
     users.push({ id: users.length + 1, ...body });
 
     fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-        return res.json({ status: "success", id: users.length })
+        return res.status(201).json({ status: "success", id: users.length })
     });
 });
 
