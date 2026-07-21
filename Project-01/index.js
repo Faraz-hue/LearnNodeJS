@@ -2,10 +2,44 @@
 // CREATING REST API using EXPRESS FRAMEWORK
 
 const express = require("express")
-const users = require("./MOCK_DATA.json")
+// const users = require("./MOCK_DATA.json")
 const fs = require("fs")
+const mongoose = require("mongoose")
+const { type } = require("os")
+const { log } = require("console")
 const app = express()
+
 const PORT = 8000
+mongoose.connect("mongodb://127.0.0.1:27017/YoutubeApp")
+    .then(() => console.log("MongoDB Connected"))
+    .catch((err) => console.log("Mongo Error", err))
+
+
+// Schema
+const userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    jobTitle: {
+        type: String,
+    },
+    gender: {
+        type: String,
+    }
+
+}, { timestamps: true })
+
+const User = mongoose.model("user", userSchema)
+
 // Middleware - Plugin
 app.use(express.urlencoded({ extended: false }))
 // Making our own middleware using use function
@@ -22,104 +56,66 @@ app.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
-    // console.log("hello from middilware 2", req.myName)
-    // return res.end("Hey")
     next()
 })
 
 
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
+    const allDbUsers = await User.find({})
     const html = `
     <ul>
-    ${users.map(user => `<li>${user.first_name}</li>`).join("")}
+    ${allDbUsers.map(user => `<li>${user.firstName} - ${user.email}</li>`).join("")}
     </ul>`
     res.send(html)
 })
 
 // 1. REST API points
-app.get("/api/users", (req, res) => {
-    // res.setHeader("X-myName", "jaguar")
+app.get("/api/users", async (req, res) => {
+    const allDbUsers = await User.find({});
+
     console.log(req.headers)
-    return res.json(users)
+    return res.json(allDbUsers)
 })
 // DYNAMIC PATH PARAMETERS
 
-app.route("/api/users/:id").get((req, res) => {
-    // GET ID FIRST
-    const id = Number(req.params.id);
-    // FIND IN JSON Second step
-    const user = users.find((user) => user.id === id
-    )
+app.route("/api/users/:id").get(async (req, res) => {
+    const user = await User.findById(req.params.id)
     if (!user) return res.status(404).json({ msg: "user not Found" })
     return res.json(user);
-}).patch((req, res) => {
-    const id = Number(req.params.id);
-    const body = req.body;
-
-    const user = users.findIndex(user => user.id === id);
-
-    if (user === -1) {
-        return res.status(404).json({
-            message: "User not found"
-        });
-    }
-
-    // Update only the fields sent in the request
-    users[user] = {
-        ...users[user],
-        ...body
-    };
-
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users, null, 2), (err) => {
-        if (err) {
-            return res.status(500).json({
-                message: "Error updating user"
-            });
-        }
-
-        return res.json({
-            message: "User updated successfully",
-            user: users[index]
-        });
+}).patch(async (req, res) => {
+    await User.findByIdAndUpdate(req.params.id, { lastName: "Changed" })
+    return res.json({
+        status: "Success"
     });
-}).delete((req, res) => {
-    const id = Number(req.params.id);
+}).delete(async (req, res) => {
 
-    const user = users.findIndex(user => user.id === id);
-
-    if (user === -1) {
-        return res.status(404).json({
-            message: "User not found"
-        });
-    }
-
-    users.splice(user, 1);
-
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users, null, 2), (err) => {
-        if (err) {
-            return res.status(500).json({
-                message: "Error deleting user"
-            });
-        }
-
-        return res.json({
-            message: "User deleted successfully",
-            users
-        });
-    });
+    await User.findByIdAndDelete(req.params.id)
+    return res.json({ status: "Success" })
 });
 
 // Question: How we do post request
 // Browser by default use GET request
 
-app.post("/api/users", (req, res) => {
+app.post("/api/users", async (req, res) => {
     const body = req.body;
 
-    users.push({ id: users.length + 1, ...body });
-
-    fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err, data) => {
-        return res.status(201).json({ status: "success", id: users.length })
-    });
+    if (!body ||
+        !body.first_name ||
+        !body.last_name ||
+        !body.email ||
+        !body.gender ||
+        !body.job_title
+    ) {
+        return res.status(400).json({ msg: "All filds are required" })
+    }
+    const result = await User.create({
+        firstName: body.first_name,
+        lastName: body.last_name,
+        email: body.email,
+        gender: body.gender,
+        jobTitle: body.job_title
+    })
+    return res.status(201).json({ msg: "Success" })
 });
 
 app.listen(PORT, () => console.log("Servert started at Port" + PORT))
