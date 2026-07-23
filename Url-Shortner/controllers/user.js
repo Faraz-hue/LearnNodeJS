@@ -15,8 +15,7 @@ async function handleUserSignUp(req, res) {
 }
 
 async function handleUserLogIn(req, res) {
-
-    const { name, email, password } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({
         email,
@@ -25,16 +24,16 @@ async function handleUserLogIn(req, res) {
 
     if (!user) {
         return res.render("login", {
-            error: "Invalid UserName or Password"
-        })
+            error: "Invalid UserName or Password",
+        });
     }
 
-    const sessionId = uuidv4()
-    setUser(sessionId, user)
-    console.log("New login:", user.email, sessionId);
-    res.cookie("uid", sessionId)
-    return res.redirect("/");
+    const token = setUser(user);
+    // res.cookie("uid", token);
+
+    return res.json({ token });
 }
+
 
 
 module.exports = {
