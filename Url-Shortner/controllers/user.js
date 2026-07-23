@@ -4,13 +4,14 @@ const { setUser } = require("../service/auth")
 async function handleUserSignUp(req, res) {
 
     const { name, email, password } = req.body;
+    console.log(User.schema.paths);
 
     await User.create({
         name,
         email,
         password,
     });
-
+    console.log(user)
     return res.redirect("/");
 }
 
@@ -30,6 +31,7 @@ async function handleUserLogIn(req, res) {
 
     const token = setUser(user);
     // res.cookie("uid", token);
+    res.cookie("token", token)
 
     return res.json({ token });
 }
