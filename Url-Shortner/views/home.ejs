@@ -150,6 +150,16 @@
 <body>
     <h1>URL Shortener</h1>
     <div>
+        <% if (user) { %>
+            <h3>
+                Welcome <%= user.name %>
+            </h3>
+            <p>
+                Email: <%= user.email %>
+            </p>
+            <% } %>
+    </div>
+    <div>
         <% if (locals.id) { %>
             <p>
                 URL Generated:
